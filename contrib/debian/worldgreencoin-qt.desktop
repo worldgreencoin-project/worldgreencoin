@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Name=WorldGreenCoin
+Comment=WorldGreenCoin P2P Cryptocurrency
+Comment[fr]=WorldGreenCoin, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=WorldGreenCoin, eşten eşe kriptografik sanal para birimi
+Exec=worldgreencoin-qt %u
+Terminal=false
+Type=Application
+Icon=worldgreencoin128
+MimeType=x-scheme-handler/worldgreencoin;
+Categories=Office;Finance;

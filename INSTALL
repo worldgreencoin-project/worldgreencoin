@@ -1,0 +1,5 @@
+Building WorldGreenCoin
+
+See doc/build-*.md for instructions on building worldgreencoind,
+the intended-for-services, no-graphical-interface, reference
+implementation of WorldGreenCoin.
