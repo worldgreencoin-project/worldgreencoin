@@ -17,7 +17,7 @@ This can be installed for either all users or the current user
     sudo update-desktop-database
 
 #### Install icon graphics
-    sudo cp share/pixmaps/worldgreencoin128.png /usr/share/pixmaps/
+    sudo cp share/pixmaps/bitcoincoin128.png /usr/share/pixmaps/
 
 ### Current user
 
@@ -28,12 +28,12 @@ This can be installed for either all users or the current user
     sudo update-desktop-database
 
 #### Install icon graphics
-    sudo cp share/pixmaps/worldgreencoin128.png /usr/share/pixmaps/
+    sudo cp share/pixmaps/bitcoin128.png /usr/share/pixmaps/
 
 
 **Note:** If you build yourself, you will either need to modify the paths in
 the .desktop file or copy worldgreencoin-qt or symlink your worldgreencoin-qt binary to `/usr/local/bin`
-and copy the `../../share/pixmaps/worldgreencoin128.png` to `/usr/share/pixmaps`
+and copy the `../../share/pixmaps/bitcoin128.png` to `/usr/share/pixmaps`
 
 
 KDE
