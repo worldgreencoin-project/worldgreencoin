@@ -36,7 +36,7 @@ script: |
   INDIR=$HOME/build
   OPTFLAGS='-O2 -msse2'
   TEMPDIR="$HOME/tempdir"
-  NEEDDIST=0
+  NEEDDIST=1
   # Qt: workaround for determinism in resource ordering
   #  Qt5's rcc uses a QHash to store the files for the resource.
   #  A security fix in QHash makes the ordering of keys to be different on every run
