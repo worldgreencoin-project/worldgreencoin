@@ -183,6 +183,7 @@ bool CBlockTreeDB::ReadFlag(const std::string &name, bool &fValue) {
 
 bool CBlockTreeDB::LoadBlockIndexGuts()
 {
+    LogPrint("coindb", "CBlockTreeDB::LoadBlockIndexGuts()\n");
     leveldb::Iterator *pcursor = NewIterator();
 
     CDataStream ssKeySet(SER_DISK, CLIENT_VERSION);
@@ -191,16 +192,23 @@ bool CBlockTreeDB::LoadBlockIndexGuts()
 
     // Load mapBlockIndex
     while (pcursor->Valid()) {
+        LogPrint("coindb", "boost::this_thread::interruption_point()\n");
         boost::this_thread::interruption_point();
         try {
+            LogPrint("coindb", "leveldb::Slice slKey = pcursor->key()\n");
             leveldb::Slice slKey = pcursor->key();
+            LogPrint("coindb", "CDataStream ssKey()\n");
             CDataStream ssKey(slKey.data(), slKey.data()+slKey.size(), SER_DISK, CLIENT_VERSION);
             char chType;
+            LogPrint("ssKey >> chType\n");
             ssKey >> chType;
             if (chType == 'b') {
+                LogPrint("leveldb::Slice slValue = pcursor->value()\n");
                 leveldb::Slice slValue = pcursor->value();
+                LogPrint("CDataStream ssValue()\n");
                 CDataStream ssValue(slValue.data(), slValue.data()+slValue.size(), SER_DISK, CLIENT_VERSION);
                 CDiskBlockIndex diskindex;
+                LogPrint("ssValue >> diskindex\n");
                 ssValue >> diskindex;
 
                 // Construct block index object
@@ -227,6 +235,7 @@ bool CBlockTreeDB::LoadBlockIndexGuts()
                 pindexNew->prevoutStake   = diskindex.prevoutStake;
                 pindexNew->nStakeTime     = diskindex.nStakeTime;
 
+                LogPrint("Construct block index object\n");
                 if (!pindexNew->CheckIndex())
                     return error("LoadBlockIndex() : CheckIndex failed: %s", pindexNew->ToString());
 

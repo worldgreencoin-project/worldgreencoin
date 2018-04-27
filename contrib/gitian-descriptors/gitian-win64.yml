@@ -74,19 +74,19 @@ script: |
       NEEDDIST=0
     fi
     # Build platform-dependent executables from source archive
-    cd $BUILDDIR
-    mkdir -p distsrc
-    cd distsrc
-    tar --strip-components=1 -xf $HOME/build/worldgreencoin/$DISTNAME
-    ./configure --bindir=$BINDIR --prefix=$STAGING --host=$HOST --with-qt-plugindir=$STAGING/plugins  --with-qt-incdir=$STAGING/include --with-qt-bindir=$STAGING/host/bin --with-boost=$STAGING --disable-maintainer-mode --with-protoc-bindir=$STAGING/host/bin --disable-dependency-tracking CPPFLAGS="-I$STAGING/include ${OPTFLAGS}" LDFLAGS="-L$STAGING/lib ${OPTFLAGS}" CXXFLAGS="-frandom-seed=worldgreencoin ${OPTFLAGS}"
-    export LD_PRELOAD=/usr/lib/faketime/libfaketime.so.1
-    export FAKETIME=$REFERENCE_DATETIME
-    make $MAKEOPTS
-    make deploy
-    make install-strip
-    cp -f worldgreencoin-*setup*.exe $BINDIR/
-    unset LD_PRELOAD
-    unset FAKETIME
+    #cd $BUILDDIR
+    #mkdir -p distsrc
+    #cd distsrc
+    #tar --strip-components=1 -xf $HOME/build/worldgreencoin/$DISTNAME
+    #./configure --bindir=$BINDIR --prefix=$STAGING --host=$HOST --with-qt-plugindir=$STAGING/plugins  --with-qt-incdir=$STAGING/include --with-qt-bindir=$STAGING/host/bin --with-boost=$STAGING --disable-maintainer-mode --with-protoc-bindir=$STAGING/host/bin --disable-dependency-tracking CPPFLAGS="-I$STAGING/include ${OPTFLAGS}" LDFLAGS="-L$STAGING/lib ${OPTFLAGS}" CXXFLAGS="-frandom-seed=worldgreencoin ${OPTFLAGS}"
+    #export LD_PRELOAD=/usr/lib/faketime/libfaketime.so.1
+    #export FAKETIME=$REFERENCE_DATETIME
+    #make $MAKEOPTS
+    #make deploy
+    #make install-strip
+    #cp -f worldgreencoin-*setup*.exe $BINDIR/
+    #unset LD_PRELOAD
+    #unset FAKETIME
   done # for BITS in
 
   # sort distribution tar file and normalize user/group/mtime information for deterministic output
