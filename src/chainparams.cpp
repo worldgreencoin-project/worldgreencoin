@@ -41,7 +41,7 @@ public:
 
         // PoSV
         bnProofOfStakeLimit = CBigNum(~uint256(0) >> 20);
-        nLastProofOfWorkHeight = 200;
+        nLastProofOfWorkHeight = 201;
         nStakeMinAge = 8 * 60 * 60; // 8 hours
         nStakeMaxAge = 45 * 24 *  60 * 60; // 45 days
 
@@ -128,7 +128,7 @@ public:
         nDefaultPort = 16844;
         nRPCPort = 16843;
         strDataDir = "testnet3";
-        nLastProofOfWorkHeight = 200; // Last POW block
+        nLastProofOfWorkHeight = 201; // Last POW block
 
         // Modify the testnet genesis block so the timestamp is valid for a later start.
         // CTransaction txGenesis = genesis.vtx[0];
@@ -166,7 +166,7 @@ public:
         pchMessageStart[3] = 0xdf;
         nSubsidyHalvingInterval = 150;
         bnProofOfWorkLimit = bnProofOfStakeLimit = CBigNum(~uint256(0) >> 1);
-        nLastProofOfWorkHeight = 200;
+        nLastProofOfWorkHeight = 201;
         genesis.nTime = 1524704400;
         genesis.nBits = 0x207fffff;
         genesis.nNonce = 2;
