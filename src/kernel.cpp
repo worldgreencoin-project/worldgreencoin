@@ -20,17 +20,17 @@ unsigned int nModifierInterval = 13 * 60;
 
 // FIXME
 // Hard checkpoints of stake modifiers to ensure they are deterministic
-static map<int, uint64_t> mapStakeModifierCheckpoints =
-    boost::assign::map_list_of()
-        /*( 0,    0xfd11f4e7 )
+static map<int, uint64_t> mapStakeModifierCheckpoints/* =
+    boost::assign::map_list_of
+        ( 0,    0xfd11f4e7 )
         ( 1000, 0x71168906 )
         ( 2000, 0x4f2ef99d )*/
     ;
 
 // Hard checkpoints of stake modifiers to ensure they are deterministic (testNet)
-static map<int, uint64_t> mapStakeModifierCheckpointsTestNet =
-    boost::assign::map_list_of()
-        //(    0, 0xfd11f4e7 )
+static map<int, uint64_t> mapStakeModifierCheckpointsTestNet/* =
+    boost::assign::map_list_of
+        (    0, 0xfd11f4e7 )*/
     ;
 
 // linear coin-aging function
