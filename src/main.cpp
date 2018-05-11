@@ -3335,16 +3335,20 @@ bool InitBlockIndex() {
             unsigned int nBlockSize = ::GetSerializeSize(block, SER_DISK, CLIENT_VERSION);
             CDiskBlockPos blockPos;
             CValidationState state;
+            LogPrintf("FindBlockPos...\n");
             if (!FindBlockPos(state, blockPos, nBlockSize+8, 0, block.nTime))
                 return error("LoadBlockIndex() : FindBlockPos failed");
+            LogPrintf("WriteBlockToDisk...\n");
             if (!WriteBlockToDisk(block, blockPos))
                 return error("LoadBlockIndex() : writing genesis block to disk failed");
+            LogPrintf("AddToBlockIndex...\n");
             if (!AddToBlockIndex(block, state, blockPos, Params().HashGenesisBlock()))
                 return error("LoadBlockIndex() : genesis block not accepted");
         } catch(std::runtime_error &e) {
             return error("LoadBlockIndex() : failed to initialize block database: %s", e.what());
         }
     }
+    LogPrintf("Finishing InitBlockIndex...\n");
 
     return true;
 }
