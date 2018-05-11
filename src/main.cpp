@@ -2360,8 +2360,10 @@ bool ActivateBestChain(CValidationState &state) {
 
 bool AddToBlockIndex(CBlock& block, CValidationState& state, const CDiskBlockPos& pos, const uint256 &hashProof)
 {
+    LogPrintf("AddToBlockIndex() Start\n");
     // Check for duplicate
     uint256 hash = block.GetHash();
+    LogPrintf("AddToBlockIndex() : checking %s\n", hash.ToString());
     if (mapBlockIndex.count(hash))
         return state.Invalid(error("AddToBlockIndex() : %s already exists", hash.ToString()), 0, "duplicate");
 
@@ -2443,6 +2445,7 @@ bool AddToBlockIndex(CBlock& block, CValidationState& state, const CDiskBlockPos
         return state.Abort(_("Failed to sync block index"));
 
     uiInterface.NotifyBlocksChanged();
+    LogPrintf("AddToBlockIndex() End\n");
     return true;
 }
 
