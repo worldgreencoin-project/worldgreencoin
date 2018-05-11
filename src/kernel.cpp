@@ -5,6 +5,7 @@
 
 #include <boost/assign/list_of.hpp>
 #include <math.h>
+#include <string>
 #include "kernel.h"
 #include "txdb.h"
 #include "script.h"
@@ -441,7 +442,7 @@ bool CheckStakeModifierCheckpoints(int nHeight, uint64_t nStakeModifierChecksum)
 {
     if (fDebug) {
         LogPrintf("CheckStakeModifierCheckpoints : nHeight=%d, nStakeModifierChecksum=0x%016x\n", nHeight, nStakeModifierChecksum);
-        LogPrintf("CheckStakeModifierCheckpoints : nHeight=%d, nStakeModifierChecksum=%s\n", nHeight, nStakeModifierChecksum.ToString().c_str());
+        LogPrintf("CheckStakeModifierCheckpoints : nHeight=%d, nStakeModifierChecksum=%s\n", nHeight, std::to_string(nStakeModifierChecksum));
     }
     
     MapModifierCheckpoints& checkpoints = TestNet() ? mapStakeModifierCheckpointsTestNet : mapStakeModifierCheckpoints;
