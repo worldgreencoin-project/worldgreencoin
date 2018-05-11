@@ -444,12 +444,14 @@ bool CheckStakeModifierCheckpoints(int nHeight, uint64_t nStakeModifierChecksum)
         LogPrintf("CheckStakeModifierCheckpoints : nHeight=%d, nStakeModifierChecksum=0x%016x\n", nHeight, nStakeModifierChecksum);
         std::ostringstream oss;
         oss << nStakeModifierChecksum;
-        LogPrintf("CheckStakeModifierCheckpoints : nHeight=%d, nStakeModifierChecksum=%s\n", nHeight, oss.str());
+        LogPrintf("CheckStakeModifierCheckpoints : nHeight=%d, nStakeModifierChecksum=%s\n", nHeight, oss.str().c_str());
     }
     
     MapModifierCheckpoints& checkpoints = TestNet() ? mapStakeModifierCheckpointsTestNet : mapStakeModifierCheckpoints;
-    if (checkpoints.count(nHeight))
+    if (checkpoints.count(nHeight)) {
+        LogPrintf("checking checkpoints\n");
         return nStakeModifierChecksum == checkpoints[nHeight];
+    }
     return true;
 }
 
