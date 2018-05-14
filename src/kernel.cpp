@@ -5,7 +5,6 @@
 
 #include <boost/assign/list_of.hpp>
 #include <math.h>
-#include <sstream>
 #include "kernel.h"
 #include "txdb.h"
 #include "script.h"
@@ -21,10 +20,10 @@ unsigned int nModifierInterval = 13 * 60;
 
 // FIXME
 // Hard checkpoints of stake modifiers to ensure they are deterministic
-static map<int, uint64_t> mapStakeModifierCheckpoints/* =
+static map<int, uint64_t> mapStakeModifierCheckpoints =
     boost::assign::map_list_of
-        ( 0,    0xfd11f4e7 )
-        ( 1000, 0x71168906 )
+        ( 0,    0x0e00670b )
+        /*( 1000, 0x71168906 )
         ( 2000, 0x4f2ef99d )*/
     ;
 
@@ -440,18 +439,12 @@ unsigned int GetStakeModifierChecksum(const CBlockIndex* pindex)
 // Check stake modifier hard checkpoints
 bool CheckStakeModifierCheckpoints(int nHeight, uint64_t nStakeModifierChecksum)
 {
-    if (fDebug) {
+    if (fDebug)
         LogPrintf("CheckStakeModifierCheckpoints : nHeight=%d, nStakeModifierChecksum=0x%016x\n", nHeight, nStakeModifierChecksum);
-        std::ostringstream oss;
-        oss << nStakeModifierChecksum;
-        LogPrintf("CheckStakeModifierCheckpoints : nHeight=%d, nStakeModifierChecksum=%s\n", nHeight, oss.str().c_str());
-    }
-    
+
     MapModifierCheckpoints& checkpoints = TestNet() ? mapStakeModifierCheckpointsTestNet : mapStakeModifierCheckpoints;
-    if (checkpoints.count(nHeight)) {
-        LogPrintf("checking checkpoints\n");
+    if (checkpoints.count(nHeight))
         return nStakeModifierChecksum == checkpoints[nHeight];
-    }
     return true;
 }
 
