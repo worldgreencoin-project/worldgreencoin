@@ -95,7 +95,7 @@ static const unsigned char REJECT_HIGHFEE = 0x44;
 // PoSV
 inline int64_t PastDrift(int64_t nTime)   { return nTime - 7200; } // up to 2 hours from the past
 inline int64_t FutureDrift(int64_t nTime) { return nTime + 7200; } // up to 2 hours from the future
-static const int64_t COIN_YEAR_REWARD = 20 * CENT; // 5% per year
+static const int64_t COIN_YEAR_REWARD = 20 * CENT; // 20% per year
 
 extern CScript COINBASE_FLAGS;
 extern CCriticalSection cs_main;
@@ -1174,7 +1174,7 @@ public:
     int Height() const {
         int nHeight = vChain.size() - 1;
         if (nHeight >= 0) {
-            return vChain.size() - 1;
+            return nHeight;
         } else {
             return 0;
         }
