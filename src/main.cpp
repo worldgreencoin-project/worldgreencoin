@@ -2418,16 +2418,24 @@ bool AddToBlockIndex(CBlock& block, CValidationState& state, const CDiskBlockPos
 
     setBlockIndexValid.insert(pindexNew);
 
+    LogPrintf("setBlockIndexValid.insert()\n");
+
     // PoSV
     if (pindexNew->IsProofOfStake())
         setStakeSeen.insert(make_pair(pindexNew->prevoutStake, pindexNew->nStakeTime));
 
+    LogPrintf("setStakeSeen.insert()\n");
+
     if (!pblocktree->WriteBlockIndex(CDiskBlockIndex(pindexNew)))
         return state.Abort(_("Failed to write block index"));
+
+    LogPrintf("pblocktree->WriteBlockIndex()\n");
 
     // New best?
     if (!ActivateBestChain(state))
         return false;
+
+    LogPrintf("ActivateBestChain()\n");
 
     LOCK(cs_main);
     if (pindexNew == chainActive.Tip())
@@ -2441,10 +2449,17 @@ bool AddToBlockIndex(CBlock& block, CValidationState& state, const CDiskBlockPos
     } else
         CheckForkWarningConditionsOnNewFork(pindexNew);
 
+    LogPrintf("CheckForkWarningConditions()\n");
+
     if (!pblocktree->Flush())
         return state.Abort(_("Failed to sync block index"));
 
+    LogPrintf("pblocktree->Flush()\n");
+
     uiInterface.NotifyBlocksChanged();
+    
+    LogPrintf("uiInterface.NotifyBlocksChanged()\n");
+
     return true;
 }
 
