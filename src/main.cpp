@@ -2315,19 +2315,23 @@ bool ActivateBestChain(CValidationState &state) {
     CBlockIndex *pindexOldTip = chainActive.Tip();
     bool fComplete = false;
     while (!fComplete) {
+        LogPrintf("FindMostWorkChain()\n");
         FindMostWorkChain();
         fComplete = true;
 
         // Check whether we have something to do.
+        LogPrintf("chainMostWork.Tip()\n");
         if (chainMostWork.Tip() == NULL) break;
 
         // Disconnect active blocks which are no longer in the best chain.
+        LogPrintf("chainMostWork.Contains()\n");
         while (chainActive.Tip() && !chainMostWork.Contains(chainActive.Tip())) {
             if (!DisconnectTip(state))
                 return false;
         }
 
         // Connect new blocks.
+        LogPrintf("!chainActive.Contains()\n");
         while (!chainActive.Contains(chainMostWork.Tip())) {
             CBlockIndex *pindexConnect = chainMostWork[chainActive.Height() + 1];
             if (!ConnectTip(state, pindexConnect)) {
@@ -2346,6 +2350,7 @@ bool ActivateBestChain(CValidationState &state) {
         }
     }
 
+    LogPrintf("chainActive.Tip() != pindexOldTip\n");
     if (chainActive.Tip() != pindexOldTip) {
         std::string strCmd = GetArg("-blocknotify", "");
         if (!IsInitialBlockDownload() && !strCmd.empty())

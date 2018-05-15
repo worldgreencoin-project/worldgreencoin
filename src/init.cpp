@@ -1078,6 +1078,8 @@ bool AppInit2(boost::thread_group& threadGroup)
 
     // scan for better chains in the block chain database, that are not yet connected in the active best chain
     CValidationState state;
+    LogPrintf("Before ActivateBestChain() at init\n");
+            
     if (!ActivateBestChain(state))
         strErrors << "Failed to connect best block";
 
