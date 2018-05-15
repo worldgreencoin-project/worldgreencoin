@@ -2414,6 +2414,8 @@ bool AddToBlockIndex(CBlock& block, CValidationState& state, const CDiskBlockPos
     if (!CheckStakeModifierCheckpoints(pindexNew->nHeight, pindexNew->nStakeModifierChecksum))
         return state.Invalid(error("AddToBlockIndex() : Rejected by stake modifier checkpoint height=%d, modifier=0x%016x", pindexNew->nHeight, nStakeModifier));
 
+    LogPrintf("Finish CheckStakeModifierCheckpoints() at AddToBlockIndex()\n");
+
     setBlockIndexValid.insert(pindexNew);
 
     // PoSV
@@ -3195,6 +3197,8 @@ bool static LoadBlockIndexDB()
         pindex->nStakeModifierChecksum = GetStakeModifierChecksum(pindex);
         if (!CheckStakeModifierCheckpoints(pindex->nHeight, pindex->nStakeModifierChecksum))
             return error("LoadBlockIndexDB(): Failed stake modifier checkpoint height=%d, modifier=0x%016x", pindex->nHeight, pindex->nStakeModifier);
+    
+        LogPrintf("Finish CheckStakeModifierCheckpoints() at LoadBlockIndexDB()\n");
     }
 
     // Load block file info
