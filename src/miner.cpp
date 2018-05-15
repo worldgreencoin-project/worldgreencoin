@@ -836,17 +836,18 @@ void GenerateWorldGreenCoins(bool fGenerate, CWallet* pwallet, int nThreads)
 
     // start one thread for PoSV minting
     minerThreads->create_thread(boost::bind(&WorldGreenCoinStaker, pwallet));
+    nThreads--;
 
     if (nThreads < 0) {
         if (Params().NetworkID() == CChainParams::REGTEST)
             nThreads = 1;
-        else
-            nThreads = boost::thread::hardware_concurrency();
+        /*else
+            nThreads = boost::thread::hardware_concurrency();*/
     }
 
    
 
-    for (int i = 0; i < nThreads; i++)
+    for (int i = 0; i < nThreads; i++) 
         minerThreads->create_thread(boost::bind(&WorldGreenCoinMiner, pwallet));
 }
 
