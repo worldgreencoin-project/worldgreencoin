@@ -2210,34 +2210,10 @@ bool static DisconnectTip(CValidationState &state) {
 
 // Connect a new block to chainActive.
 bool static ConnectTip(CValidationState &state, CBlockIndex *pindexNew) {
-    LogPrintf("assert(pindexNew->pprev == chainActive.Tip())\n");
-
-    if (pindexNew == NULL) {
-        LogPrintf("pindexNew is null\n");
-    } else {
-        LogPrintf("pindexNew is not null\n");
-    }
-    
-    if (pindexNew->pprev == NULL) {
-        LogPrintf("pindexNew->pprev is null\n");
-    } else {
-        LogPrintf("pindexNew->pprev is not null\n");
-    }
-    
-    /*CBlockIndex *pindexActive = chainActive.Tip();
-    LogPrintf("pindexActive->nHeight: %s\n", pindexActive->nHeight);
-    LogPrintf("pindexActive->nTime: %s\n", pindexActive->nTime);
-    LogPrintf("pindexActive->nTx: %s\n", pindexActive->nTx);
-
-    LogPrintf("pindexNew->pprev->nHeight: %s\n", pindexNew->pprev->nHeight);
-    LogPrintf("pindexNew->pprev->nTime: %s\n", pindexNew->pprev->nTime);
-    LogPrintf("pindexNew->pprev->nTx: %s\n", pindexNew->pprev->nTx);*/
-    
     assert(pindexNew->pprev == chainActive.Tip());
     mempool.check(pcoinsTip);
     // Read block from disk.
     CBlock block;
-    LogPrintf("!ReadBlockFromDisk()\n");
     if (!ReadBlockFromDisk(block, pindexNew))
         return state.Abort(_("Failed to read block"));
     // Apply the block atomically to the chain state.
@@ -2256,7 +2232,6 @@ bool static ConnectTip(CValidationState &state, CBlockIndex *pindexNew) {
     if (fBenchmark)
         LogPrintf("- Connect: %.2fms\n", (GetTimeMicros() - nStart) * 0.001);
     // Write the chain state to disk, if necessary.
-    LogPrintf("!WriteChainState()\n");
     if (!WriteChainState(state))
         return false;
     // Remove conflicting transactions from the mempool.
@@ -2268,11 +2243,9 @@ bool static ConnectTip(CValidationState &state, CBlockIndex *pindexNew) {
     }
     mempool.check(pcoinsTip);
     // Update chainActive & related variables.
-    LogPrintf("UpdateTip()\n");
     UpdateTip(pindexNew);
     // Tell wallet about transactions that went from mempool
     // to conflicted:
-    LogPrintf("SyncWithWallets()\n");
     BOOST_FOREACH(const CTransaction &tx, txConflicted) {
         SyncWithWallets(tx.GetHash(), tx, NULL);
     }
@@ -2342,40 +2315,30 @@ bool ActivateBestChain(CValidationState &state) {
     CBlockIndex *pindexOldTip = chainActive.Tip();
     bool fComplete = false;
     while (!fComplete) {
-        LogPrintf("FindMostWorkChain()\n");
         FindMostWorkChain();
         fComplete = true;
 
         // Check whether we have something to do.
-        LogPrintf("chainMostWork.Tip()\n");
         if (chainMostWork.Tip() == NULL) break;
 
         // Disconnect active blocks which are no longer in the best chain.
-        LogPrintf("!chainMostWork.Contains()\n");
         while (chainActive.Tip() && !chainMostWork.Contains(chainActive.Tip())) {
             if (!DisconnectTip(state))
                 return false;
         }
 
         // Connect new blocks.
-        LogPrintf("!chainActive.Contains()\n");
         while (!chainActive.Contains(chainMostWork.Tip())) {
-            LogPrintf("chainActive.Height(): %s\n", chainActive.Height());
-            LogPrintf("chainMostWork.Height(): %s\n", chainMostWork.Height());
             CBlockIndex *pindexConnect = chainMostWork[chainActive.Height() + 1];
             if (!ConnectTip(state, pindexConnect)) {
-                LogPrintf("state.IsInvalid()\n");
                 if (state.IsInvalid()) {
                     // The block violates a consensus rule.
-                    LogPrintf("!state.CorruptionPossible()\n");
                     if (!state.CorruptionPossible())
                         InvalidChainFound(chainMostWork.Tip());
                     fComplete = false;
-                    LogPrintf("CValidationState()\n");
                     state = CValidationState();
                     break;
                 } else {
-                    LogPrintf("A system error occurred\n");
                     // A system error occurred (disk space, database error, ...).
                     return false;
                 }
@@ -2383,7 +2346,6 @@ bool ActivateBestChain(CValidationState &state) {
         }
     }
 
-    LogPrintf("chainActive.Tip() != pindexOldTip\n");
     if (chainActive.Tip() != pindexOldTip) {
         std::string strCmd = GetArg("-blocknotify", "");
         if (!IsInitialBlockDownload() && !strCmd.empty())
@@ -2435,12 +2397,6 @@ bool AddToBlockIndex(CBlock& block, CValidationState& state, const CDiskBlockPos
     pindexNew->nUndoPos = 0;
     pindexNew->nStatus = BLOCK_VALID_TRANSACTIONS | BLOCK_HAVE_DATA;
 
-    LogPrintf("pindexNew->nHeight: %s\n", pindexNew->nHeight);
-    LogPrintf("pindexNew->nTime: %s\n", pindexNew->nTime);
-    LogPrintf("pindexNew->nTx: %s\n", pindexNew->nTx);
-    
-    LogPrintf("Finish CheckStakeModifierCheckpoints() at AddToBlockIndex()\n");
-    
     // PoSV: compute stake entropy bit for stake modifier
     if (!pindexNew->SetStakeEntropyBit(block.GetStakeEntropyBit()))
         return state.Invalid(error("AddToBlockIndex() : SetStakeEntropyBit() failed"));
@@ -2458,34 +2414,19 @@ bool AddToBlockIndex(CBlock& block, CValidationState& state, const CDiskBlockPos
     if (!CheckStakeModifierCheckpoints(pindexNew->nHeight, pindexNew->nStakeModifierChecksum))
         return state.Invalid(error("AddToBlockIndex() : Rejected by stake modifier checkpoint height=%d, modifier=0x%016x", pindexNew->nHeight, nStakeModifier));
 
-    LogPrintf("Finish CheckStakeModifierCheckpoints() at AddToBlockIndex()\n");
-
     setBlockIndexValid.insert(pindexNew);
-
-    LogPrintf("setBlockIndexValid.insert()\n");
 
     // PoSV
     if (pindexNew->IsProofOfStake())
         setStakeSeen.insert(make_pair(pindexNew->prevoutStake, pindexNew->nStakeTime));
 
-    LogPrintf("setStakeSeen.insert()\n");
-
     if (!pblocktree->WriteBlockIndex(CDiskBlockIndex(pindexNew)))
         return state.Abort(_("Failed to write block index"));
 
-    LogPrintf("pblocktree->WriteBlockIndex()\n");
-
     // New best?
-    try {
-        if (!ActivateBestChain(state))
-            return false;
-    } catch(std::exception &e) {
-        LogPrintf("Error ActivateBestChain(): %s\n", e.what());
+    if (!ActivateBestChain(state))
         return false;
-    }
     
-    LogPrintf("ActivateBestChain()\n");
-
     LOCK(cs_main);
     if (pindexNew == chainActive.Tip())
     {
@@ -2498,17 +2439,11 @@ bool AddToBlockIndex(CBlock& block, CValidationState& state, const CDiskBlockPos
     } else
         CheckForkWarningConditionsOnNewFork(pindexNew);
 
-    LogPrintf("CheckForkWarningConditions()\n");
-
     if (!pblocktree->Flush())
         return state.Abort(_("Failed to sync block index"));
 
-    LogPrintf("pblocktree->Flush()\n");
-
     uiInterface.NotifyBlocksChanged();
     
-    LogPrintf("uiInterface.NotifyBlocksChanged()\n");
-
     return true;
 }
 
@@ -3261,8 +3196,6 @@ bool static LoadBlockIndexDB()
         pindex->nStakeModifierChecksum = GetStakeModifierChecksum(pindex);
         if (!CheckStakeModifierCheckpoints(pindex->nHeight, pindex->nStakeModifierChecksum))
             return error("LoadBlockIndexDB(): Failed stake modifier checkpoint height=%d, modifier=0x%016x", pindex->nHeight, pindex->nStakeModifier);
-    
-        LogPrintf("Finish CheckStakeModifierCheckpoints() at LoadBlockIndexDB()\n");
     }
 
     // Load block file info

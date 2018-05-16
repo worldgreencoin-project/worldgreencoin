@@ -2421,12 +2421,10 @@ set<CTxDestination> CWallet::GetAccountAddresses(string strAccount) const
 
 bool CReserveKey::GetReservedKey(CPubKey& pubkey)
 {
-    LogPrintf("CReserveKey::GetReservedKey()\n");
     if (nIndex == -1)
     {
         CKeyPool keypool;
         pwallet->ReserveKeyFromKeyPool(nIndex, keypool);
-        LogPrintf("pwallet->ReserveKeyFromKeyPool()\n");
         if (nIndex != -1)
             vchPubKey = keypool.vchPubKey;
         else {
@@ -2437,10 +2435,8 @@ bool CReserveKey::GetReservedKey(CPubKey& pubkey)
                 return false;
         }
     }
-    LogPrintf("vchPubKey.IsValid()\n");
     assert(vchPubKey.IsValid());
     pubkey = vchPubKey;
-    LogPrintf("return true\n");
     return true;
 }
 

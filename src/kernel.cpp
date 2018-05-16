@@ -443,12 +443,9 @@ bool CheckStakeModifierCheckpoints(int nHeight, uint64_t nStakeModifierChecksum)
         LogPrintf("CheckStakeModifierCheckpoints : nHeight=%d, nStakeModifierChecksum=0x%016x\n", nHeight, nStakeModifierChecksum);
 
     MapModifierCheckpoints& checkpoints = TestNet() ? mapStakeModifierCheckpointsTestNet : mapStakeModifierCheckpoints;
-    if (checkpoints.count(nHeight)) {
-        if (fDebug) {
-            LogPrintf("checking: 0x%016x\n", checkpoints[nHeight]);
-        }
+    if (checkpoints.count(nHeight)) 
         return nStakeModifierChecksum == checkpoints[nHeight];
-    }
+        
     return true;
 }
 

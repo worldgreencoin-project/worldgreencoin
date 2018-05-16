@@ -1173,12 +1173,6 @@ public:
     /** Return the maximal height in the chain. Is equal to chain.Tip() ? chain.Tip()->nHeight : -1. */
     int Height() const {
         return vChain.size() - 1;
-        int nHeight = vChain.size() - 1;
-        if (nHeight >= 0) {
-            return nHeight;
-        } else {
-            return 0;
-        }
     }
 
     /** Set/initialize a chain with a given tip. Returns the forking point. */
